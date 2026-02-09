@@ -1,0 +1,100 @@
+#THE FIRST BUG :: KeyError: 'builtins.int' (email content)
+
+#You passed an integer to msg.set_content() in your send_email method:
+#content=random.randint(10**13, 10**14 - 1)  # ❌ int
+#THE SOLUTION :
+
+#Convert to string before sending:
+#content=str(random.randint(10**13, 10**14 - 1))
+# THE MASSEGE :
+
+#Traceback (most recent call last):
+"""File "main.py", line 32, in creat_account
+  db_account.send_email(
+File "models.py", line 35, in send_email
+ msg.set_content(content)
+File "Lib\email\message.py", line 1207, in set_content
+  super().set_content(*args, **kw)
+File "Lib\email\message.py", line 1137, in set_content
+ content_manager.set_content(self, *args, **kw)
+File "Lib\email\contentmanager.py", line 58, in _find_set_handler
+ raise KeyError(full_path_for_error)
+KeyError: 'builtins.int'"""
+# Lesson:
+
+#Python’s email module requires string content, never raw int.
+#Always check the expected type of function parameters.
+
+
+# THE BUG NUM 2 :: Pydantic validation errors (compte_num) :
+
+# AccountRead expected a string, but your database stored an int:
+# compte_num: str  # Pydantic model
+# compte_num = 48001972265554  # SQLModel stored as int
+
+# THE SOLUTION :
+
+# In AccountRead Convert str by int (just in AccountRead (schemas.py))
+
+# THE MASSEGE :
+
+"""pydantic_core._pydantic_core.ValidationError: 1 validation error for AccountRead
+compte_num
+  Input should be a valid string [type=string_type, input_value=48001972265554, input_type=int]
+
+"""
+
+# Lesson: 
+# Data type mismatch between database and Pydantic model causes validation errors.
+# Decide whether numeric values are numbers or strings (for big account numbers, strings are safer).
+
+
+# THE BUG NUM 3 :: Pydantic v2 “orm_mode” warnings :
+
+# You used from_orm() with Pydantic v2
+# VS Code/editor showed a mid-line / deprecated warning
+
+# THE SOLUTION :
+#Use v2 syntax with model_config = {"from_attributes": True}:
+"""class AccountRead(BaseModel):
+    ...
+    model_config = {"from_attributes": True}
+"""
+
+# THE MASSEGE :
+"""UserWarning: Valid config keys have changed in V2:
+* 'orm_mode' has been renamed to 'from_attributes'
+  warnings.warn(message, UserWarning)
+"""
+# Lesson:
+#Pydantic v2 changed orm_mode → from_attributes
+#Old methods like from_orm() still work, but may show warnings.
+#Always check documentation after upgrading versions.
+
+# THE BUG NUM 4 :: Sending password vs content :
+#You initially sent content from outside, instead of the generated password.
+# THE SOLUTION :
+#Use self.password directly in send_email():
+#msg.set_content(f"Your account password is: {self.password}")
+
+# THE MASSEGE :
+"""What happened:
+
+You tried to send content that wasn’t the generated password
+
+No direct terminal error, but emails didn’t have the password
+
+Example “logical bug”: the email looked like this in inbox:
+
+This email was sent using Python 🎉
+
+
+…but it should have been:
+
+Your account password is: 4821"""
+
+# Lesson: 
+#Avoid redundant parameters when the value is already in the object (self).
+#Makes code cleaner and reduces bugs.
+
+# THE BUG NUM 5 :: 5️⃣ Returning SQLModel objects in FastAPI

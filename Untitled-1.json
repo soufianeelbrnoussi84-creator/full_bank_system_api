@@ -1,0 +1,51 @@
+{
+  "name": "full_bank_system_api_v2.0.0",
+  "path": "c:\\Users\\LENOVO\\Documents\\full_bank_system_api_v2.0.0",
+  "type": "directory",
+  "children": [
+    {
+      "name": "issues",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": "issues",
+          "type": "file",
+          "icon": "📄"
+        }
+      ]
+    },
+    {
+      "name": "bank-api.db",
+      "type": "file",
+      "icon": "📄"
+    },
+    {
+      "name": "database.py",
+      "type": "file",
+      "icon": "🐍"
+    },
+    {
+      "name": "main.py",
+      "type": "file",
+      "icon": "🐍"
+    },
+    {
+      "name": "models.py",
+      "type": "file",
+      "icon": "🐍"
+    },
+    {
+      "name": "schemas.py",
+      "type": "file",
+      "icon": "🐍"
+    }
+  ],
+  "metadata": {
+    "generated": "2026-02-04T16:39:35.490Z",
+    "generator": "FileTree Pro Extension",
+    "version": "0.2.0",
+    "showIcons": true,
+    "maxDepth": 10
+  }
+}
