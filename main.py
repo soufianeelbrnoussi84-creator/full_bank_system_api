@@ -3,6 +3,7 @@ from database import create_db_and_tables ,get_session
 from models import Accounts, Transactions
 from sqlmodel import Session, select
 from schemas import AccountAdd,AccountRead,BalanceDeposi,BalanceWithdraw,TransactionRead
+import security
 
 
 app = FastAPI()
@@ -20,12 +21,14 @@ def the_welcome_space():
 def creat_account(account:AccountAdd,
                   session: Session = Depends(get_session)
     ):
+    
+    hashed_pw = security.hash_password(account.password)    
     db_account = Accounts(
         user_name = account.user_name,
         email = account.email,
         balance = account.balance,
+        hashed_password = hashed_pw,
     )    
-    db_account.user_password()
     db_account.user_num() 
     db_account.send_email( 
             to_email= account.email,

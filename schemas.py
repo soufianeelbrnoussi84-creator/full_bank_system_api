@@ -4,6 +4,7 @@ import datetime
 class AccountAdd(BaseModel):
     user_name : str
     email : str
+    password :str
     balance : float = Field(ge=0) # Field(ge=0) to stoped the user from enter a negative balance 
     
     
@@ -12,7 +13,7 @@ class AccountRead(BaseModel):
     user_name : str
     email : str
     balance : float 
-    compte_num : int
+    compte_num : str
     model_config = {
         "from_attributes": True  # ✅ v2 replacement for orm_mode
     }

@@ -7,6 +7,9 @@ from email.message import EmailMessage
 import datetime
 from dotenv import load_dotenv
 import os
+import security
+
+
 
 load_dotenv()
 
@@ -17,9 +20,9 @@ class Accounts(SQLModel, table=True):
     id: Optional[int] = Field(default = None, primary_key=True)
     user_name : str
     email : str
-    password : str 
     balance : float 
     compte_num : str
+    hashed_password :str
     
     def deposit(self, amount : float):
         if amount <= 0:
@@ -36,9 +39,6 @@ class Accounts(SQLModel, table=True):
         self.balance -= amount
         return amount
     
-    def user_password(self):
-        self.password = str(random.randint(1000, 9999))
-
 
     def user_num(self):
         self.compte_num = str(random.randint(10**13, 10**14 - 1))
@@ -52,7 +52,8 @@ class Accounts(SQLModel, table=True):
         msg["Subject"] = subject
         msg["From"] = "soufianeelbrnoussi84@gmail.com"
         msg["To"] = to_email
-        msg.set_content(f"Your account passwor dnumber is: {self.compte_num}")
+        msg.set_content(f"Your account number is: {self.compte_num}")
+
 
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
