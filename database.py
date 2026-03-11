@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel , create_engine, Session
 
 
-DATABASE_URL = "sqlite:///banking-api.db"
+DATABASE_URL = "sqlite:///banki.db"
 
 
 engine = create_engine(

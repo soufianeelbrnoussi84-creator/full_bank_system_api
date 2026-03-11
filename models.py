@@ -7,7 +7,8 @@ from email.message import EmailMessage
 import datetime
 from dotenv import load_dotenv
 import os
-import security
+from enum import Enum
+
 
 
 
@@ -16,13 +17,18 @@ load_dotenv()
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
+class UserRole(str, Enum):
+    user = "user"
+    admin = "admin"
+
 class Accounts(SQLModel, table=True):
     id: Optional[int] = Field(default = None, primary_key=True)
     user_name : str
-    email : str
-    balance : float 
+    email : str = Field(index=True, unique=True)
+    balance : float = Field(default=0)
     compte_num : str
     hashed_password :str
+    role: UserRole = Field(default=UserRole.user) # "user" or "admin"
     
     def deposit(self, amount : float):
         if amount <= 0:
@@ -66,3 +72,10 @@ class Transactions(SQLModel, table=True):
     type : str
     amount : float
     date : datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
+    
+
+
+
+    
+
+
